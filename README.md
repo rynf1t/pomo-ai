@@ -1,6 +1,6 @@
 # Pomodoro Timer
 
-[pomo.itsryan.me](pomo.itsryan.me)
+[pomo.itsryan.me](https://pomo.itsryan.me)
 
 This is a simple pomodoro timer that allows you to set a timer for a specific amount of time and then play a sound when the timer is up.
 
