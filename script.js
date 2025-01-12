@@ -6,14 +6,21 @@ const SOUNDS = {
     arcade: 'https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg'
 };
 
-let timeLeft = 25 * 60; // 25 minutes in seconds
+let timeLeft = getWorkDuration(); // Initialize with work duration
 let timerId = null;
 let isRunning = false;
-let isPomodoro = true; // Track if we're in Pomodoro or Break mode
+let isPomodoro = true;
 let currentSound = null;
 
-const POMODORO_TIME = 25 * 60;
-const BREAK_TIME = 5 * 60;
+function getWorkDuration() {
+    const minutes = parseInt(document.getElementById('workDuration').value) || 25;
+    return minutes * 60;
+}
+
+function getBreakDuration() {
+    const minutes = parseInt(document.getElementById('breakDuration').value) || 5;
+    return minutes * 60;
+}
 
 // Add audio element
 const audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
@@ -48,17 +55,14 @@ function updateDisplay() {
     const timeString = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     const modeText = isPomodoro ? 'WORK' : 'BREAK';
     
-    // Update timer display
     document.getElementById('timer').textContent = timeString;
-    
-    // Update browser tab title
     document.title = `${timeString} - ${modeText}`;
 }
 
 function updateButtonText() {
     const button = document.getElementById('toggleButton');
     if (!isRunning) {
-        if ((isPomodoro && timeLeft === POMODORO_TIME) || (!isPomodoro && timeLeft === BREAK_TIME)) {
+        if ((isPomodoro && timeLeft === getWorkDuration()) || (!isPomodoro && timeLeft === getBreakDuration())) {
             button.textContent = 'Start';
         } else {
             button.textContent = 'Resume';
@@ -69,18 +73,15 @@ function updateButtonText() {
 }
 
 function toggleMode(isWork) {
-    // Reset everything when switching modes
     clearInterval(timerId);
     timerId = null;
     isRunning = false;
     isPomodoro = isWork;
-    timeLeft = isPomodoro ? POMODORO_TIME : BREAK_TIME;
+    timeLeft = isPomodoro ? getWorkDuration() : getBreakDuration();
     
-    // Update active states
     document.getElementById('workMode').classList.toggle('active', isPomodoro);
     document.getElementById('breakMode').classList.toggle('active', !isPomodoro);
     
-    // Force button text to Start
     document.getElementById('toggleButton').textContent = 'Start';
     
     updateDisplay();
@@ -119,13 +120,11 @@ function resetTimer() {
     timerId = null;
     isRunning = false;
     isPomodoro = true;
-    timeLeft = POMODORO_TIME;
+    timeLeft = getWorkDuration();
     
-    // Update active states for mode buttons
     document.getElementById('workMode').classList.add('active');
     document.getElementById('breakMode').classList.remove('active');
     
-    // Force button text to Start
     document.getElementById('toggleButton').textContent = 'Start';
     
     updateDisplay();
@@ -140,7 +139,18 @@ function testSound() {
 updateDisplay();
 updateButtonText();
 
-// Add event listeners to stop sound when interacting with other controls
+// Add event listeners
 document.getElementById('toggleButton').addEventListener('click', stopCurrentSound);
-document.getElementById('mode').addEventListener('click', stopCurrentSound);
+document.getElementById('workDuration').addEventListener('change', function() {
+    if (!isRunning && isPomodoro) {
+        timeLeft = getWorkDuration();
+        updateDisplay();
+    }
+});
+document.getElementById('breakDuration').addEventListener('change', function() {
+    if (!isRunning && !isPomodoro) {
+        timeLeft = getBreakDuration();
+        updateDisplay();
+    }
+});
 document.querySelector('button[onclick="resetTimer()"]').addEventListener('click', stopCurrentSound);

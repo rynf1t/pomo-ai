@@ -13,19 +13,33 @@
         <button class="mode-button active" id="workMode" onclick="toggleMode(true)">WORK</button>
         <button class="mode-button" id="breakMode" onclick="toggleMode(false)">BREAK</button>
     </div>
-    <div class="timer" id="timer">25:00</div>
-    <div class="controls">
-        <button id="toggleButton" onclick="toggleTimer()">Start</button>
-        <button onclick="resetTimer()">Reset</button>
+    
+    <div class="timer-settings">
+        <div class="duration-input">
+            <label>WORK (MIN)</label>
+            <input type="number" id="workDuration" min="1" max="60" value="25">
+        </div>
+        <div class="duration-input">
+            <label>BREAK (MIN)</label>
+            <input type="number" id="breakDuration" min="1" max="60" value="5">
+        </div>
     </div>
-    <div class="controls sound-control">
+    
+    <div class="timer" id="timer">25:00</div>
+    
+    <div class="controls">
+        <button id="toggleButton" onclick="toggleTimer()">START</button>
+        <button onclick="resetTimer()">RESET</button>
+    </div>
+    
+    <div class="sound-control">
         <div class="select-wrapper">
             <i class="fas fa-volume-up"></i>
             <select id="soundSelect" class="sound-select" onchange="testSound()">
-                <option value="beep">Beep</option>
-                <option value="bell">Bell</option>
-                <option value="digital">Digital</option>
-                <option value="arcade">Arcade</option>
+                <option value="beep">BEEP</option>
+                <option value="bell">BELL</option>
+                <option value="digital">DIGITAL</option>
+                <option value="arcade">ARCADE</option>
             </select>
         </div>
     </div>
